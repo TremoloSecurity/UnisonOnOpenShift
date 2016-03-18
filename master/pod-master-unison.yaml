@@ -1,0 +1,65 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: unison-master
+  labels:
+    name: unison-master
+spec:
+  containers:
+    - resources:
+      image: tremolosecurity/unison:latest
+      name: unison
+      env:
+        - name: JAVA_OPTS
+          value:
+      ports:
+        - containerPort: 8080
+          protocol: TCP
+          name: proxy-open
+        - containerPort: 8443
+          protocol: TCP
+          name: proxy-secure
+        - containerPort: 9090
+          protocol: TCP
+          name: admin-secure
+        - containerPort: 9093
+          protocol: TCP
+          name: ws-secure
+      volumeMounts:
+        - name: unison-proxy-auth
+          mountPath: /usr/local/tremolo/tremolo-service/apps/proxy/auth
+        - name: unison-proxy-webinf
+          mountPath: /usr/local/tremolo/tremolo-service/apps/proxy/WEB-INF
+        - name: unison-tremoloadmin-webinf
+          mountPath: /usr/local/tremolo/tremolo-service/apps/tremolo-admin/WEB-INF
+        - name: unison-webservices-webinf
+          mountPath: /usr/local/tremolo/tremolo-service/apps/webservices/WEB-INF
+        - name: unison-conf
+          mountPath: /usr/local/tremolo/tremolo-service/conf
+        - name: unison-extlib
+          mountPath: /usr/local/tremolo/tremolo-service/ext-lib
+  volumes:
+    - name: unison-proxy-auth
+      persistentVolumeClaim:
+        claimName: pvc-master-apps-proxy-auth
+        readOnly: false
+    - name: unison-proxy-webinf
+      persistentVolumeClaim:
+        claimName: pvc-master-apps-proxy-webinf
+        readOnly: false
+    - name: unison-tremoloadmin-webinf
+      persistentVolumeClaim:
+        claimName: pvc-master-apps-tremoloadmin-webinf
+        readOnly: false
+    - name: unison-webservices-webinf
+      persistentVolumeClaim:
+        claimName: pvc-master-apps-webservices-webinf
+        readOnly: false
+    - name: unison-conf
+      persistentVolumeClaim:
+        claimName: pvc-master-conf
+        readOnly: false
+    - name: unison-extlib
+      persistentVolumeClaim:
+        claimName: pvc-master-extlib
+        readOnly: false

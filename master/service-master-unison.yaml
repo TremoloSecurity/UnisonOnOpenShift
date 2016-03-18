@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: unison-master
+spec:
+  selector:
+    name: unison-master
+  ports:
+  - port: 9090
+    protocol: TCP
+    targetPort: 9090
