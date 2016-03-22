@@ -17,3 +17,52 @@ All logging is sent to standard out per OpenShfit and Docker best practices
 ## Persistent Volumes
 
 At this time OpenShift does not provide a capability to explicitly bind a persistent volume to a persistent volume claim without first created the persistent volume and then IMMEDIATELY created the claim on that volume.  This will be a feature in the next version of OpenShift.  Until then, its important to create the persistent volume and its claim in tandum to ensure that the claim binds to the volume correctly.
+
+## Step-by-Step Instructions
+
+### Persistent Volumes
+
+Prior to deploying Unison five persistent volumes must be built and integrated with OpenShift.
+
+| Volume | Function | Persistant Volume | Persistent Volume Claim |
+| ------ | -------- | ----------------- | ----------------------- |
+| apps/proxy/auth | Stores jsp files used in authentication | pv-*-apps-proxy-auth.yaml | pvc-*-apps-proxy-auth.yaml |
+| apps/proxy/WEB-INF | Stores Unison's configuration and keystores | pv-*-apps-proxy-webinf.yaml | pvc-*-apps-proxy-webinf.yaml |
+| apps/tremoloadmin/WEB-INF | Stores Unison's admin system configuration | pv-*-apps-tremoloadmin-webinf.yaml | pvc-*-apps-tremoloadmin-webinf.yaml |
+| apps/webservices/WEB-INF | Stores Unison's web services configuration and keystores | pv-*-apps-tremoloadmin-webinf.yaml | pvc-*-apps-tremoloadmin-webinf.yaml |
+| conf | The Unison server configuration | pv-*-conf.yaml | pvc-*-conf.yaml |
+| ext-lib | Additional libraries uploaded to Unison | pv-*-extlib.yaml | pvc-*-extlib.yaml |
+
+The only files you will edit are the pv-*.yaml files as these will point to where the volume should be mounted from.  If the volume will come from an NFS mount, then simply changing the path and server variables should suffice.  If using another backend (ie GlusterFS or CIFS) the pv-*.yaml files will need to be updated to reflect where the persistent volume will be stored.
+
+Even though the Docker file defines a logs volume, this can be ignored as all logs are sent through standard out.
+
+### Services
+
+The templates do not define services as there can be any number of services based on host names.  A single Unison server can host any number of host names so its left to the developer to determine which hosts are best for the project.
+
+### Deploying Unison
+
+Once the persistent volumes are defined, the volumes and claims can be deployed.  Since OpenShift currently has no way to explicitly bind a claim to a volume its VERY IMPORTANT that the volume and the claim get created in the correct order:
+
+`````bash
+$ ./oc login
+$ ./oc project my-unison-master
+$ ./oc create -f /path/to/pv-master-apps-proxy-auth.yaml
+$ ./oc create -f /path/to/pvc-master-apps-proxy-auth.yaml
+$ ./oc create -f /path/to/pv-master-apps-proxy-webinf.yaml
+$ ./oc create -f /path/to/pvc-master-apps-proxy-webinf.yaml
+$ ./oc create -f /path/to/pv-master-apps-tremoloadmin-webinf.yaml
+$ ./oc create -f /path/to/pvc-master-apps-tremoloadmin-webinf.yaml
+$ ./oc create -f /path/to/pv-master-apps-webservices-webinf.yaml
+$ ./oc create -f /path/to/pvc-master-apps-webservices-webinf.yaml
+$ ./oc create -f /path/to/pv-master-apps-conf.yaml
+$ ./oc create -f /path/to/pvc-master-apps-conf.yaml
+$ ./oc create -f /path/to/pv-master-apps-extlib.yaml
+$ ./oc create -f /path/to/pvc-master-apps-extlib.yaml
+$ ./oc create -f /path/to/pod-master-unison.yaml
+$ ./oc create -f /path/to/service-master-unison.yaml
+`````
+
+At this point OpenShift will download and deploy the Unison Docker image from Dockerhub.  You can create a route for the admin service from OpenShift admin console and access the Unison admin console through that route.  For instance if you define a route with the host name unison-admin.openshift.mydomain.com then you would access the admin system through https://unison-admin.openshift.mydomain.com/.  You wouldn't go directly to port 9090 because the route and the service will do that for you.
+The master will need write access to the persistent volumes so the access modes is different.  Its also important to note that admins will be able to 
