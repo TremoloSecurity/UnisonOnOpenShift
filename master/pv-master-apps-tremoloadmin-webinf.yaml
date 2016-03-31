@@ -8,6 +8,6 @@ spec:
   accessModes:
     - "ReadWriteOnce"
   nfs:
-    path: "/var/nfs/unison-openshift/tremoloadmin-webinf"
-    server: "nfs-dev.tremolo.lan"
+    path: "/nfsvolumes/pv03"
+    server: "origin"
   persistentVolumeReclaimPolicy: "Recycle"
