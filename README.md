@@ -2,7 +2,7 @@
 
 The stock Unison image on Dockerhub (https://hub.docker.com/r/tremolosecurity/unison/) runs on OpenShift out-of-the-box without modification.  This repo contains example yaml files for deploying Unison on OpenShift.  This build was tested on OpenShift Origin 3.2. 
 ## Compliant with Origin All-In-One v1.1.4
-This fork should work out of the box on the Origin All-In-One v1.1.4.
+This fork should work out of the box on the Origin All-In-One v1.1.4 : https://www.openshift.org/vm/.
 
 ## Master/Slave & Clustering
 
