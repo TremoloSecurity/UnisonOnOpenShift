@@ -8,6 +8,6 @@ spec:
   accessModes:
     - "ReadWriteOnce"
   nfs:
-    path: "/var/nfs/unison-openshift/ext-lib"
-    server: "nfs-dev.tremolo.lan"
+    path: "/nfsvolumes/pv06"
+    server: "origin"
   persistentVolumeReclaimPolicy: "Recycle"
