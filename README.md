@@ -1,6 +1,8 @@
 # Unison On OpenShift
 
-The stock Unison image on Dockerhub (https://hub.docker.com/r/tremolosecurity/unison/) runs on OpenShift out-of-the-box without modification.  This repo contains example yaml files for deploying Unison on OpenShift.  This build was tested on OpenShift Origin 3.2.  
+The stock Unison image on Dockerhub (https://hub.docker.com/r/tremolosecurity/unison/) runs on OpenShift out-of-the-box without modification.  This repo contains example yaml files for deploying Unison on OpenShift.  This build was tested on OpenShift Origin 3.2. 
+## Compliant with Origin All-In-One v1.1.4
+This fork should work out of the box on the Origin All-In-One v1.1.4.
 
 ## Master/Slave & Clustering
 
@@ -47,7 +49,7 @@ Once the persistent volumes are defined, the volumes and claims can be deployed.
 
 `````bash
 $ ./oc login
-$ ./oc project my-unison-master
+$ ./oc new-project my-unison-master
 $ ./oc create -f /path/to/pv-master-apps-proxy-auth.yaml
 $ ./oc create -f /path/to/pvc-master-apps-proxy-auth.yaml
 $ ./oc create -f /path/to/pv-master-apps-proxy-webinf.yaml
