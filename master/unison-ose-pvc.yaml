@@ -1,7 +1,7 @@
 kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
-  name: pvc-master-apps-proxy-auth
+  name: pvc-master
 spec:
   accessModes:
     - ReadWriteOnce
